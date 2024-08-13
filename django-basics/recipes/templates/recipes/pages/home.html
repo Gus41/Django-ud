@@ -4,13 +4,9 @@
 {% block page %}
 
 <div class="main-content container main-content-list">
-    {% include "recipes/partials/recipe.html" %}
-    {% include "recipes/partials/recipe.html" %}
-    {% include "recipes/partials/recipe.html" %}
-    {% include "recipes/partials/recipe.html" %}
-    {% include "recipes/partials/recipe.html" %}
-    {% include "recipes/partials/recipe.html" %}
-    {% include "recipes/partials/recipe.html" %}
+    {% for recipe in recipes %}
+        {% include "recipes/partials/recipe.html" %}
+    {% endfor %}
 </div>
 
 {% endblock page %}
