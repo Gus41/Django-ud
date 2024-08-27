@@ -13,7 +13,7 @@
         {% if recipe.author is not None and recipe.author  %}
         <span class="recipe-author-item">
             <i class="fas fa-user"></i>
-            {{recipe.author}}
+            {{recipe.author.first_name}}
         </span>
         {% endif %}
 
@@ -51,9 +51,15 @@
         </div>
     </div>
     {% if is_detail %}
-        <div class="preparation-steps">
+    <div class="preparation-steps">
+        {% if recipe.preparation_steps_is_html %}
+         {{recipe.preparation_steps|safe}}
+        {% else %}
+        
             <p>{{recipe.preparation_steps|linebreaksbr}}</p>
-        </div>
+
+        {% endif %}
+    </div>        
     {% else %}
         <footer class="recipe-footer">
             <a class="recipe-read-more button button-dark button-full-width" href="{% url "recipe:detail" recipe.id %}">
