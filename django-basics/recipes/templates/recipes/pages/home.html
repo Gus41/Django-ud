@@ -4,8 +4,11 @@
 {% block page %}
 
 <div class="main-content container main-content-list">
+
     {% for recipe in recipes %}
-        {% include "recipes/partials/recipe.html" %}
+       {% include "recipes/partials/recipe.html" %}
+       {% empty %}
+        <h1>No recipes found...</h1>
     {% endfor %}
 </div>
 
