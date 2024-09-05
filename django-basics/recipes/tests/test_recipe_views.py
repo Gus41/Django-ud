@@ -28,7 +28,16 @@ class RecipeViewsTest(TestCase):
         self.assertTemplateUsed(response,'recipes/pages/home.html')
 
 
-    #testando se a home renderiza no recipes founded
+    #t----------- estando se a home renderiza no recipes founded
     def test_recipe_homes_template_show_no_recipes_founded_if_no_recipes(self):
         response = self.client.get(reverse('recipe:home'))
         self.assertIn('No recipes found...',response.content.decode('utf-8'))
+
+    #---------- status code view 404 (getobjector404)
+    def test_recipe_category_view_returns_404(self):
+        response = self.client.get(reverse('recipe:category', kwargs={'id': 1000}))
+        self.assertEqual(response.status_code,404)
+
+    def test_recipe_detail_view_returns_404(self):
+        response = self.client.get(reverse('recipe:detail', kwargs={'id': 1000}))
+        self.assertEqual(response.status_code,404)
