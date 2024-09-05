@@ -22,8 +22,13 @@ class RecipeViewsTest(TestCase):
         response = self.client.get(reverse('recipe:home'))
         self.assertEqual(response.status_code,200)
 
-    # template tests
+    #----------- template tests
     def test_recipe_home_view_loads_correct_template(self):
         response = self.client.get(reverse('recipe:home'))
         self.assertTemplateUsed(response,'recipes/pages/home.html')
-    
+
+
+    #testando se a home renderiza no recipes founded
+    def test_recipe_homes_template_show_no_recipes_founded_if_no_recipes(self):
+        response = self.client.get(reverse('recipe:home'))
+        self.assertIn('No recipes found...',response.content.decode('utf-8'))
