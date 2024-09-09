@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse,resolve
-from recipes import views
+from recipes import views,models
 
 
 class RecipeViewsTest(TestCase):
@@ -41,3 +41,37 @@ class RecipeViewsTest(TestCase):
     def test_recipe_detail_view_returns_404(self):
         response = self.client.get(reverse('recipe:detail', kwargs={'id': 1000}))
         self.assertEqual(response.status_code,404)
+        
+    #---------
+    def test_recipe_home_temaplte_loads_recipes(self):
+        category = models.Category.objects.create(name="catecoty_mock")
+        author = models.User.objects.create_user(
+            first_name='user',
+            last_name='user',
+            password='user',
+            email='user@gmail.com',
+            username='user'
+        )
+        recipe = models.Recipe.objects.create(
+            category=category,
+            author=author,
+            title = 'Recipe',
+            description = 'Description',
+            slug = 'recipe-slug',
+            preparation_time = 10,
+            preparation_time_unit = 'Minutes',
+            servings = 5,
+            servings_unit = 'Porções',
+            preparation_steps = 'lorem',
+            preparation_steps_is_html = False,
+            updated_at = '',
+            is_published = True,
+            
+            )
+        response = self.client.get(reverse('recipe:home'))
+        response_content = response.content.decode('utf-8')
+        self.assertIn(recipe.description,response_content)
+        self.assertIn(recipe.servings_unit,response_content)
+        self.assertIn(recipe.title,response_content)
+        
+        
