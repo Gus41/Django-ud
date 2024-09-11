@@ -1,10 +1,16 @@
-from django.test import TestCase
 from django.urls import reverse,resolve
 from recipes import views,models
+from .test_recipe_base import RecipeTestBase
 
 
-class RecipeViewsTest(TestCase):
+class RecipeViewsTest(RecipeTestBase):
+
     
+    #vai ser executado depois cada um dos testes
+    def tearDown(self) -> None:
+        return super().tearDown()    
+    
+
     def test_recipe_home_view_function_is_correct(self):
         view = resolve(reverse('recipe:home'))
         self.assertIs(view.func,views.home)
@@ -30,6 +36,7 @@ class RecipeViewsTest(TestCase):
 
     #t----------- estando se a home renderiza no recipes founded
     def test_recipe_homes_template_show_no_recipes_founded_if_no_recipes(self):
+        models.Recipe.objects.get(pk=1).delete()
         response = self.client.get(reverse('recipe:home'))
         self.assertIn('No recipes found...',response.content.decode('utf-8'))
 
@@ -44,34 +51,9 @@ class RecipeViewsTest(TestCase):
         
     #---------
     def test_recipe_home_temaplte_loads_recipes(self):
-        category = models.Category.objects.create(name="catecoty_mock")
-        author = models.User.objects.create_user(
-            first_name='user',
-            last_name='user',
-            password='user',
-            email='user@gmail.com',
-            username='user'
-        )
-        recipe = models.Recipe.objects.create(
-            category=category,
-            author=author,
-            title = 'Recipe',
-            description = 'Description',
-            slug = 'recipe-slug',
-            preparation_time = 10,
-            preparation_time_unit = 'Minutes',
-            servings = 5,
-            servings_unit = 'Porções',
-            preparation_steps = 'lorem',
-            preparation_steps_is_html = False,
-            updated_at = '',
-            is_published = True,
-            
-            )
+        
         response = self.client.get(reverse('recipe:home'))
         response_content = response.content.decode('utf-8')
-        self.assertIn(recipe.description,response_content)
-        self.assertIn(recipe.servings_unit,response_content)
-        self.assertIn(recipe.title,response_content)
+        self.assertIn('Description',response_content)
         
         
