@@ -36,7 +36,7 @@ class RecipeViewsTest(RecipeTestBase):
 
     #t----------- estando se a home renderiza no recipes founded
     def test_recipe_homes_template_show_no_recipes_founded_if_no_recipes(self):
-        models.Recipe.objects.get(pk=1).delete()
+        
         response = self.client.get(reverse('recipe:home'))
         self.assertIn('No recipes found...',response.content.decode('utf-8'))
 
@@ -51,10 +51,33 @@ class RecipeViewsTest(RecipeTestBase):
         
     #---------
     def test_recipe_home_temaplte_loads_recipes(self):
-        
+        nedded_title = 'Recipe created'
+        self.make_recipe(title=nedded_title)
         response = self.client.get(reverse('recipe:home'))
         response_content = response.content.decode('utf-8')
-        #in RecipeTestBase is creates a recipe with description as "Description"
-        self.assertIn('Description',response_content)
+       
+        self.assertIn(nedded_title,response_content)
         #self.fail('Falhar teste por n motivos')
+
+    def test_recipe_category_temaplte_loads_recipes(self):
+        nedded_category = 'Category-test'
+
+        nedded_title = 'Recipe created in this Category-test'
+        
+        self.make_recipe(category_data={'name':nedded_category},title=nedded_title)
+
+        response = self.client.get(reverse('recipe:category', kwargs={'id':1}))
+        response_content = response.content.decode('utf-8')
+        self.assertIn(nedded_title,response_content)
+        self.assertIn(nedded_category,response_content)
+        
+    
+    def test_recipe_detail_temaplte_loads_recipes(self):
+        nedded_title = "Unique recipe"
+        self.make_recipe(title=nedded_title)
+        response = self.client.get(reverse('recipe:detail', kwargs={'id':1}))
+        response_content = response.content.decode('utf-8')
+        self.assertIn(nedded_title,response_content)
+
+    
         
