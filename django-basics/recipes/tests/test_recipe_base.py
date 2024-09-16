@@ -1,5 +1,5 @@
 from django.test import TestCase
-from recipes import views,models
+from recipes import models
 
 class RecipeTestBase(TestCase):
      #Cria uma receita no banco de dados para cada teste 

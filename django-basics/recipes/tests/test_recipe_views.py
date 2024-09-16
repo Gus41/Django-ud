@@ -1,7 +1,7 @@
 from django.urls import reverse,resolve
 from recipes import views,models
 from .test_recipe_base import RecipeTestBase
-
+from unittest import skip
 
 class RecipeViewsTest(RecipeTestBase):
 
@@ -56,5 +56,5 @@ class RecipeViewsTest(RecipeTestBase):
         response_content = response.content.decode('utf-8')
         #in RecipeTestBase is creates a recipe with description as "Description"
         self.assertIn('Description',response_content)
-        
+        #self.fail('Falhar teste por n motivos')
         
