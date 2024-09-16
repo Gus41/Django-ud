@@ -54,6 +54,7 @@ class RecipeViewsTest(RecipeTestBase):
         
         response = self.client.get(reverse('recipe:home'))
         response_content = response.content.decode('utf-8')
+        #in RecipeTestBase is creates a recipe with description as "Description"
         self.assertIn('Description',response_content)
         
         
