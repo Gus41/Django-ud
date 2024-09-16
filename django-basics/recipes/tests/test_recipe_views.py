@@ -36,7 +36,7 @@ class RecipeViewsTest(RecipeTestBase):
 
     #t----------- estando se a home renderiza no recipes founded
     def test_recipe_homes_template_show_no_recipes_founded_if_no_recipes(self):
-        
+
         response = self.client.get(reverse('recipe:home'))
         self.assertIn('No recipes found...',response.content.decode('utf-8'))
 
@@ -58,6 +58,16 @@ class RecipeViewsTest(RecipeTestBase):
        
         self.assertIn(nedded_title,response_content)
         #self.fail('Falhar teste por n motivos')
+
+    #---------
+    def test_recipe_home_temaplte_dont_load_recipes_not_published(self):
+        nedded_title = 'This recipe will not apear'
+        self.make_recipe(title=nedded_title,is_published=False)
+        response = self.client.get(reverse('recipe:home'))
+        response_content = response.content.decode('utf-8')
+       
+        self.assertNotIn(nedded_title,response_content)
+
 
     def test_recipe_category_temaplte_loads_recipes(self):
         nedded_category = 'Category-test'
