@@ -3,16 +3,27 @@ from recipes import views,models
 
 class RecipeTestBase(TestCase):
      #Cria uma receita no banco de dados para cada teste 
-     def setUp(self) -> None:
-        category = models.Category.objects.create(name="catecoty_mock")
-        author = models.User.objects.create_user(
-            first_name='user',
-            last_name='user',
-            password='user',
+
+    def setUp(self) -> None:
+
+        category = self.make_category('Teste')
+        author = self.make_author('Fulano')
+        self.make_recipe(category=category,author=author)
+        return super().setUp()
+    
+
+    def make_category(self,name='Category'):
+         return models.Category.objects.create(name=name)
+    def make_author(self,name='user'):
+        return models.User.objects.create_user(
+            first_name=name,
+            last_name=name,
+            password='12345678',
             email='user@gmail.com',
-            username='user'
+            username=name
         )
-        recipe = models.Recipe.objects.create(
+    def make_recipe(self,category,author):
+        return models.Recipe.objects.create(
             category=category,
             author=author,
             title = 'Recipe',
@@ -27,6 +38,6 @@ class RecipeTestBase(TestCase):
             updated_at = '',
             is_published = True,
             
-            )
-        return super().setUp()
+        )
+    
     
