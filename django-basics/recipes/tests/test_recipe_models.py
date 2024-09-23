@@ -54,3 +54,5 @@ class RecipeModelTest(RecipeTestBase):
         recipe.full_clean()
         recipe.save()
         self.assertFalse(recipe.is_published, msg="Is published is not false by default")
+
+    
