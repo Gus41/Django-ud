@@ -36,7 +36,7 @@ def search(request : HttpRequest):
     if not term:
         raise Http404
     
-    recipes = Recipe.objects.all().filter(is_published=True).order_by('-id')
+    recipes = Recipe.objects.all().filter(is_published=True,title=term).order_by('-id')
     context = {
         'recipes' : recipes
     }
