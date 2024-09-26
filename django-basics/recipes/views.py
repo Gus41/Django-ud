@@ -1,5 +1,5 @@
 from django.shortcuts import render,get_list_or_404,get_object_or_404
-from django.http import HttpRequest
+from django.http import HttpRequest,Http404
 from recipes.models import Recipe
 # Create your views here
 
@@ -22,7 +22,6 @@ def recipe(request: HttpRequest, id : int):
 
 
 def category( request: HttpRequest, id: int):
-    #----
     recipes = get_list_or_404(Recipe.objects.filter(category__id=id,is_published=True).order_by('-id'))
     #----
     context = {
@@ -30,3 +29,15 @@ def category( request: HttpRequest, id: int):
         'title' : f'{recipes[0].category.name}'
     }
     return render(request,'recipes/pages/category.html',context)
+
+def search(request : HttpRequest):
+    term = request.GET.get("q")
+
+    if not term:
+        raise Http404
+    
+    recipes = Recipe.objects.all().filter(is_published=True).order_by('-id')
+    context = {
+        'recipes' : recipes
+    }
+    return render(request,'recipes/pages/search.html',context)
