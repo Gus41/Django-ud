@@ -31,13 +31,14 @@ def category( request: HttpRequest, id: int):
     return render(request,'recipes/pages/category.html',context)
 
 def search(request : HttpRequest):
-    term = request.GET.get("q")
+    term = request.GET.get("q",'').strip()
 
     if not term:
         raise Http404
     
     recipes = Recipe.objects.all().filter(is_published=True,title=term).order_by('-id')
     context = {
-        'recipes' : recipes
+        'recipes' : recipes,
+        'term' : term
     }
     return render(request,'recipes/pages/search.html',context)
