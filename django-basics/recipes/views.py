@@ -1,5 +1,6 @@
 from django.shortcuts import render,get_list_or_404,get_object_or_404
 from django.http import HttpRequest,Http404
+from django.db.models import Q
 from recipes.models import Recipe
 # Create your views here
 
@@ -36,7 +37,13 @@ def search(request : HttpRequest):
     if not term:
         raise Http404
     
-    recipes = Recipe.objects.all().filter(is_published=True,title=term).order_by('-id')
+    recipes = Recipe.objects.filter(
+        Q(
+            Q(title__icontains=term) | Q(description__icontains=term) # OR
+        ), 
+        is_published=True
+    ).order_by("-id")
+
     context = {
         'recipes' : recipes,
         'term' : term

@@ -21,3 +21,19 @@ class RecipeSearchViewsTest(RecipeTestBase):
         response = self.client.get(reverse("recipe:search") + f'?q={nedded}')
         response_content = response.content.decode('utf-8')
         self.assertIn("&lt;nedded&gt;",response_content)
+
+    def test_recipe_search_can_find_recipe_by_title(self):
+        nedded_title = "testing recipe test"
+        searched_title = "test"
+        recipe = self.make_recipe(title=nedded_title,slug='testing-recipe-test')
+
+        response = self.client.get(reverse("recipe:search") + f'?q={searched_title}')
+        self.assertIn(recipe,response.context['recipes'])
+
+    def test_recipe_search_can_find_recipe_by_descripion(self):
+        nedded_description = "testing recipe test"
+        searched_title = "test"
+        recipe = self.make_recipe(description=nedded_description,slug='testing-recipe-test')
+
+        response = self.client.get(reverse("recipe:search") + f'?q={searched_title}')
+        self.assertIn(recipe,response.context['recipes'])
