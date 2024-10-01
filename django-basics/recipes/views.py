@@ -2,8 +2,8 @@ from django.shortcuts import render,get_list_or_404,get_object_or_404
 from django.http import HttpRequest,Http404
 from django.db.models import Q
 from recipes.models import Recipe
+from django.core.paginator import Paginator
 # Create your views here
-
 
 def home(request : HttpRequest):
     recipes = Recipe.objects.all().filter(is_published=True).order_by('-id')
