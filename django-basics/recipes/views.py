@@ -7,8 +7,12 @@ from django.core.paginator import Paginator
 
 def home(request : HttpRequest):
     recipes = Recipe.objects.all().filter(is_published=True).order_by('-id')
+    paginator = Paginator(recipes,3)
+    current_page = request.GET.get("page",1) #if parameter page not exists, return 1
+    print(current_page)
+    page_obj = paginator.get_page(current_page)
     context = {
-        'recipes' : recipes
+        'recipes' : page_obj
     }
     return render(request,'recipes/pages/home.html',context)
 
