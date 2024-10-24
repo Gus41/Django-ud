@@ -9,23 +9,12 @@ from utils import pagination
 
 
 def home(request : HttpRequest):
-    recipes = Recipe.objects.all().filter(is_published=True).order_by('-id')
-    paginator = Paginator(recipes,3)
-    try:
-        current_page = int(request.GET.get("page",1)) #if parameter page not exists, return 1
-    except ValueError:
-        current_page = 1
-    
-    page_obj = paginator.get_page(current_page)
-    
-    pagination_range = pagination.make_pagination_range(
-        paginator.page_range,
-        4,
-        current_page
-    )
+    recipes = Recipe.objects.all().filter(is_published=True).order_by('-id')    
+    page_obj,pagination_range,current_page = pagination.make_pagination(request,recipes,3)
     context = {
         'recipes' : page_obj,
-        'pagination_range' : pagination_range
+        'pagination_range' : pagination_range,
+        'current_page' : current_page
     }
     return render(request,'recipes/pages/home.html',context)
 
@@ -42,10 +31,14 @@ def recipe(request: HttpRequest, id : int):
 def category( request: HttpRequest, id: int):
     recipes = get_list_or_404(Recipe.objects.filter(category__id=id,is_published=True).order_by('-id'))
     #----
+    page_obj,pagination_range,current_page = pagination.make_pagination(request,recipes,3)
     context = {
-        'recipes' : recipes,
+        'recipes' : page_obj,
+        'pagination_range' : pagination_range,
+        'current_page' : current_page,
         'title' : f'{recipes[0].category.name}'
     }
+
     return render(request,'recipes/pages/category.html',context)
 
 def search(request : HttpRequest):
@@ -61,8 +54,14 @@ def search(request : HttpRequest):
         is_published=True
     ).order_by("-id")
 
+    print(recipes)
+    page_obj,pagination_range,current_page = pagination.make_pagination(request,recipes,3)
     context = {
-        'recipes' : recipes,
-        'term' : term
+        'recipes' : page_obj,
+        'pagination_range' : pagination_range,
+        'current_page' : current_page,
+        'term' : term,
+        'aditional_url_query' : f'&q={term}'
     }
+
     return render(request,'recipes/pages/search.html',context)
