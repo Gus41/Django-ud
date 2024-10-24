@@ -54,7 +54,6 @@ def search(request : HttpRequest):
         is_published=True
     ).order_by("-id")
 
-    print(recipes)
     page_obj,pagination_range,current_page = pagination.make_pagination(request,recipes,3)
     context = {
         'recipes' : page_obj,
