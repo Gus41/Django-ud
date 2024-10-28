@@ -4,13 +4,14 @@ from django.db.models import Q
 from recipes.models import Recipe
 from django.core.paginator import Paginator
 from utils import pagination
+import os
 # Create your views here
 
-
+PER_PAGE = os.environ.get("PER_PAGE")
 
 def home(request : HttpRequest):
     recipes = Recipe.objects.all().filter(is_published=True).order_by('-id')    
-    page_obj,pagination_range,current_page = pagination.make_pagination(request,recipes,3)
+    page_obj,pagination_range,current_page = pagination.make_pagination(request,recipes,PER_PAGE)
     context = {
         'recipes' : page_obj,
         'pagination_range' : pagination_range,
@@ -31,7 +32,7 @@ def recipe(request: HttpRequest, id : int):
 def category( request: HttpRequest, id: int):
     recipes = get_list_or_404(Recipe.objects.filter(category__id=id,is_published=True).order_by('-id'))
     #----
-    page_obj,pagination_range,current_page = pagination.make_pagination(request,recipes,3)
+    page_obj,pagination_range,current_page = pagination.make_pagination(request,recipes,PER_PAGE)
     context = {
         'recipes' : page_obj,
         'pagination_range' : pagination_range,
@@ -54,7 +55,7 @@ def search(request : HttpRequest):
         is_published=True
     ).order_by("-id")
 
-    page_obj,pagination_range,current_page = pagination.make_pagination(request,recipes,3)
+    page_obj,pagination_range,current_page = pagination.make_pagination(request,recipes,PER_PAGE)
     context = {
         'recipes' : page_obj,
         'pagination_range' : pagination_range,
