@@ -27,4 +27,5 @@ class RecipeCategoryViewsTest(RecipeTestBase):
         response_content = response.content.decode('utf-8')
         self.assertIn(nedded_title,response_content)
         self.assertIn(nedded_category,response_content)
+        
     
