@@ -9,8 +9,16 @@
     {% include "recipes/partials/header.html" %}
     {% include "recipes/partials/search.html" %}
 
-
     <main class="main-content-container container">
+        {% if messages %}
+            <div class="main-content center container">
+                {% for message in messages  %}    
+                    <div class="message {{message.tags}}">
+                            {{message}}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
         {% block page %}
             
         {% endblock page %}  
