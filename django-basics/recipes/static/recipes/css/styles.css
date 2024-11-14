@@ -259,6 +259,13 @@ h1,h2,h3,h4,h5,h6{
     background-color: var(--color-primary-dark) !important;
 }
 
+.messages-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 24px;
+}
 
 .message {
   padding: 1rem;
@@ -266,6 +273,8 @@ h1,h2,h3,h4,h5,h6{
   border: 1px solid var(--color-dark-text);
   background: var(--color-gray-2);
   color: var(--color-dark-text);
+  width: 100%;
+  text-align: center;
 }
 .message-error {
   border: 1px solid var(--color-error-dark);
@@ -296,4 +305,10 @@ h1,h2,h3,h4,h5,h6{
   border: 1px solid var(--color-debug-dark);
   background: var(--color-debug-light);
   color: var(--color-debug-dark);
+}
+
+@media (max-width: 600px){
+    .main-content-list{
+        grid-template-columns: repeat(auto-fit,minmax(100%,1fr));
+    }
 }

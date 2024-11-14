@@ -16,6 +16,7 @@ def home(request : HttpRequest):
     recipes = Recipe.objects.all().filter(is_published=True).order_by('-id')    
     page_obj,pagination_range,current_page = pagination.make_pagination(request,recipes,PER_PAGE)
     
+    messages.success(request,"Succes")
     context = {
         'recipes' : page_obj,
         'pagination_range' : pagination_range,

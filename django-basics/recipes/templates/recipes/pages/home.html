@@ -2,13 +2,6 @@
 {% extends "global/base.html" %}
 {% block title %}Home{% endblock title %}
 {% block page %}
-<div class="main-content center container">
-    {% if messages %}
-        {% for message in messages  %}
-            <p>{{message}}</p>
-        {% endfor %}
-    {% endif %}
-</div>
 <div class="main-content container main-content-list">
 
     {% for recipe in recipes %}
