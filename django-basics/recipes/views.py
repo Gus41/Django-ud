@@ -4,7 +4,7 @@ from django.db.models import Q
 from recipes.models import Recipe
 from django.core.paginator import Paginator
 from utils import pagination
-from django.contrib import messages
+#from django.contrib import messages
 import os
 
 # Create your views here
@@ -16,7 +16,6 @@ def home(request : HttpRequest):
     recipes = Recipe.objects.all().filter(is_published=True).order_by('-id')    
     page_obj,pagination_range,current_page = pagination.make_pagination(request,recipes,PER_PAGE)
     
-    messages.success(request,"Succes")
     context = {
         'recipes' : page_obj,
         'pagination_range' : pagination_range,
@@ -49,7 +48,6 @@ def category( request: HttpRequest, id: int):
     return render(request,'recipes/pages/category.html',context)
 
 def search(request : HttpRequest):
-    messages.success(request,"Pesquisa efetuada")
     term = request.GET.get("q",'').strip()
 
     if not term:
