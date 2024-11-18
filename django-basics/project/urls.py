@@ -23,6 +23,7 @@ from django.conf import settings
 
 urlpatterns = [
     path('',include('recipes.urls')),
+    path('auth/',include('authors.urls')),
     path('admin/', admin.site.urls),
 ]
 
