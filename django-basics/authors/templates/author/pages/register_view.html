@@ -7,6 +7,17 @@
 <div class="main-content container main-content-list">
     <form action="{% url "auth:create" %}" method="POST">
         {% csrf_token %}
+        
+        {% if form.errors %}
+            <div class="form-content form-content-grid">
+                <div class="form-group">
+                    <p class="message-error message">
+                       There are errors in the form, please fix them and send aain 
+                    </p>
+                </div>
+            </div>
+        {% endif %}
+
         <div class="form-content form-content-grid">
             {% for field in form  %}
                 <div class="form-group">
