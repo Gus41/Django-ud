@@ -21,6 +21,6 @@ def create(request: HttpRequest):
     POST = request.POST
 
     request.session["register_form_data"] = POST
-    form = RegisterForm(POST)
+    #form = RegisterForm(POST)
     
     return redirect('auth:register')
