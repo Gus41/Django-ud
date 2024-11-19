@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
+import re
+
 
 
 def add_attr(field,attr_name,attr_val):
@@ -12,6 +14,15 @@ def add_attr(field,attr_name,attr_val):
 def add_placeholder(field,place_holder_val: str):
     add_attr(field,'placeholder',place_holder_val)
 
+
+
+
+def strong_password(password: str):
+    regex = re.compile(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$')
+
+    if not regex.match(password):
+        raise ValidationError("Password is not strong",code='invalid')
+    
 
 class RegisterForm(forms.ModelForm):
 
@@ -31,6 +42,10 @@ class RegisterForm(forms.ModelForm):
                 'required' : 'Password must not be empty'
             },
         )
+    password = forms.CharField(
+        required=True,
+        #validators=[strong_password]
+    )
 
     class Meta:
         model = User
@@ -57,34 +72,10 @@ class RegisterForm(forms.ModelForm):
         }
 
     
-
-
-    def clean_password(self):
-        data = self.cleaned_data.get("password")
-
-        if 'erro' in data:
-            raise ValidationError(
-                'Invalid value: %(value)s',
-                code='invalid',
-                params={'value' : 'erro'}
-            )
-        
-        return data
-    
-    def clean_first_name(self):
-        data = self.cleaned_data.get("first_name")
-        if 'John Doe' in data:
-            raise ValidationError(
-                'Invalid value: %(value)s',
-                code="invalid",
-                params={
-                    'value' : 'John Doe'
-                }
-            )
         
     def clean(self):
         cleaned_data = super().clean()        
-        password = cleaned_data.get("passowrd")
+        password = cleaned_data.get("password")
         password2 = cleaned_data.get("password2")
 
         if password != password2:
