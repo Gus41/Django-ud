@@ -63,7 +63,7 @@ class RegisterForm(forms.ModelForm):
         }
         widgets = { 
             'first_name' : forms.TextInput(attrs={
-                'placeholder' : 'username here',
+                'placeholder' : 'Type your name here',
                 'class' : 'text-input other-class yadayada'
             }),
             'password' : forms.PasswordInput(attrs={
