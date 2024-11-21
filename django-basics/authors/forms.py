@@ -28,24 +28,23 @@ class RegisterForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        add_attr(self.fields['username'],'placeholder','Type your username here')
+        add_placeholder(self.fields['username'],'Type your username here')
         add_placeholder(self.fields['email'],'Type your email here')
-    
+        add_placeholder(self.fields['password'],'Type your password here')
+        add_placeholder(self.fields['password2'],'Repeat your password here')
+        add_placeholder(self.fields['first_name'],'Type your name here')
+        add_placeholder(self.fields['last_name'], 'Type your last name here')
     
     
     password2 = forms.CharField(
             required=True,
-            widget= forms.PasswordInput(attrs={
-                'placeholder' : 'Repeat your password here'
-            }),
+            widget= forms.PasswordInput(),
             error_messages={
-                'required' : 'Password must not be empty'
+                'required' : 'Passwords must be equal'
             },
         )
-    password = forms.CharField(
-        required=True,
-        #validators=[strong_password]
-    )
+    
+    password = forms.CharField(required=True,widget=forms.PasswordInput(),error_messages={'required' : 'Password must not be empty'})
 
     class Meta:
         model = User
@@ -60,15 +59,6 @@ class RegisterForm(forms.ModelForm):
         }
         help_texts = {
             'email' : 'The e-mail must be valid.'
-        }
-        widgets = { 
-            'first_name' : forms.TextInput(attrs={
-                'placeholder' : 'Type your name here',
-                'class' : 'text-input other-class yadayada'
-            }),
-            'password' : forms.PasswordInput(attrs={
-                'placeholder' : 'Type your password here'
-            })
         }
 
     
