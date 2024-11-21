@@ -36,15 +36,8 @@ class RegisterForm(forms.ModelForm):
         add_placeholder(self.fields['last_name'], 'Type your last name here')
     
     
-    password2 = forms.CharField(
-            required=True,
-            widget= forms.PasswordInput(),
-            error_messages={
-                'required' : 'Passwords must be equal'
-            },
-        )
-    
-    password = forms.CharField(required=True,widget=forms.PasswordInput(),error_messages={'required' : 'Password must not be empty'})
+    password2 = forms.CharField(required=True,widget= forms.PasswordInput(),error_messages={'required' : 'Passwords must be equal'},)
+    password = forms.CharField(required=True,widget=forms.PasswordInput(),error_messages={'required' : 'Password must not be empty'},label='Password')
 
     class Meta:
         model = User
@@ -54,11 +47,11 @@ class RegisterForm(forms.ModelForm):
             'username' : 'Username',
             'first_name' : "First name",
             'last_name' : 'Last name',
-            'email' : 'E-mail',
-            'password' : 'Password'
+            'email' : 'E-mail',        
         }
+
         help_texts = {
-            'email' : 'The e-mail must be valid.'
+            'email' : 'The e-mail must be valid',
         }
 
     

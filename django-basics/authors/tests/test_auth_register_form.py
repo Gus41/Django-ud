@@ -19,3 +19,28 @@ class AuthRegisterFormUnitTest(TestCase):
         placeholder = form[field].field.widget.attrs['placeholder']
         
         self.assertEqual(placeholder_expected,placeholder)
+
+
+    @parameterized.expand([
+        ('email','The e-mail must be valid'),
+    ])
+
+    def test_helptexts_are_correct(self,field : str, help_text_nedded: str):
+        form = RegisterForm() 
+        help_text  = form[field].field.help_text
+        
+        self.assertEqual(help_text,help_text_nedded)
+
+    @parameterized.expand([
+            ('username', 'Username'),
+            ('first_name', "First name"),
+            ('last_name', 'Last name'),
+            ('email', 'E-mail'),
+            ('password', 'Password'),
+    ])
+
+    def test_labels_are_correct(self,field: str, label_nedded: str):
+        form = RegisterForm() 
+        label  = form[field].field.label
+        
+        self.assertEqual(label,label_nedded)
