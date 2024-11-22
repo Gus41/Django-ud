@@ -53,8 +53,6 @@ class RegisterForm(forms.ModelForm):
         help_texts = {
             'email' : 'The e-mail must be valid',
         }
-
-    
         
     def clean(self):
         cleaned_data = super().clean()        
