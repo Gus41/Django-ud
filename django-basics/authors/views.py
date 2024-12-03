@@ -6,7 +6,6 @@ from django.contrib import messages
 def register(request: HttpRequest):
 
     register_form_data = request.session.get("register_form_data") or None
-    print(register_form_data)
 
     form = RegisterForm(register_form_data)
     context = {
@@ -26,7 +25,7 @@ def create(request: HttpRequest):
 
     if form.is_valid():
         form.save()
-        print("Valid form, saving it")
+        
         messages.success(request,"User created!")
         del(request.session["register_form_data"])
 

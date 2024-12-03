@@ -42,6 +42,7 @@ class AuthRegisterFormUnitTest(TestCase):
         
         self.assertEqual(label,label_nedded)
 
+#---------------------------------------------------
 
 from django.test import TestCase as DJTestCase
 from django.urls import reverse
@@ -63,10 +64,17 @@ class AuthoRegisterIntegrationTest(DJTestCase):
 
     @parameterized.expand([
         ('password', 'Password must not be empty'),
+        ('first_name','Write your first name'),
+        ('last_name','Write your last name'),
+        ('password','Password must not be empty'),
+        ('password2','Pleas repeat your password'),
+        ('email','Email is required'),
+
     ])
     def test_fields_can_not_be_empty(self, field: str, msg: str):
         self.form_data[field] = ''
         url = reverse('auth:create')
         response = self.client.post(url,data=self.form_data,follow=True)
-        self.assertIn(msg,response.content.decode("utf-8"))
+        
+        self.assertIn(msg,response.context['form'].errors.get(field))
 

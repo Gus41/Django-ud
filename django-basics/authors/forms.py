@@ -1,21 +1,15 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-
 import re
-
 
 
 def add_attr(field,attr_name,attr_val):
     field.widget.attrs[attr_name] = f'{attr_val}'.strip()
 
 
-
 def add_placeholder(field,place_holder_val: str):
     add_attr(field,'placeholder',place_holder_val)
-
-
-
 
 def strong_password(password: str):
     regex = re.compile(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$')
@@ -36,8 +30,41 @@ class RegisterForm(forms.ModelForm):
         add_placeholder(self.fields['last_name'], 'Type your last name here')
     
     
-    password2 = forms.CharField(required=True,widget= forms.PasswordInput(),error_messages={'required' : 'Passwords must be equal'},)
-    password = forms.CharField(required=True,widget=forms.PasswordInput(),error_messages={'required' : 'Password must not be empty'},label='Password')
+    password2 = forms.CharField(
+        required=True,
+        widget= forms.PasswordInput(),
+        error_messages={
+        'required' : 'Pleas repeat your password'
+        },)
+    
+    password = forms.CharField(
+        required=True,widget=forms.PasswordInput(),error_messages={
+        'required' : 'Password must not be empty'
+        },
+        label='Password'
+    )
+    
+    first_name = forms.CharField(
+        required=True,error_messages={
+        'required':"Write your first name"
+        },
+        label="First name"
+    )
+    
+    last_name = forms.CharField(
+        required=True,error_messages={
+        'required':"Write your last name"
+        },
+        label="Last name"
+    )
+    email = forms.EmailField(
+        required=True,
+        error_messages={
+            'required': "Email is required"
+        },
+        label="E-mail",
+        help_text = 'The e-mail must be valid'
+    )
 
     class Meta:
         model = User
@@ -45,14 +72,8 @@ class RegisterForm(forms.ModelForm):
 
         labels = {
             'username' : 'Username',
-            'first_name' : "First name",
-            'last_name' : 'Last name',
-            'email' : 'E-mail',        
         }
 
-        help_texts = {
-            'email' : 'The e-mail must be valid',
-        }
         
     def clean(self):
         cleaned_data = super().clean()        
