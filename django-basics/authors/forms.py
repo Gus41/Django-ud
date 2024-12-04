@@ -41,6 +41,7 @@ class RegisterForm(forms.ModelForm):
         required=True,widget=forms.PasswordInput(),error_messages={
         'required' : 'Password must not be empty'
         },
+        validators=[strong_password],
         label='Password'
     )
     
@@ -65,14 +66,28 @@ class RegisterForm(forms.ModelForm):
         label="E-mail",
         help_text = 'The e-mail must be valid'
     )
+    username = forms.CharField(
+        label='Username',
+        help_text=(
+            'Username must have letter, numbers or one of those _-', # Just - and _ other charactes will not be accepted
+            'The length should be between 4 and 50 characters.'
+        ),
+        min_length=4,
+        max_length=50,
+        required=True,
+        error_messages={
+            'required': 'Username must not be empty',
+            'min_length' : 'Username must have at least four characters',
+            'max_length': 'Username must have less than 50 characters'
+        }
+        
+    )
 
     class Meta:
         model = User
         fields = ['first_name','last_name','username','email','password']
 
-        labels = {
-            'username' : 'Username',
-        }
+     
 
         
     def clean(self):

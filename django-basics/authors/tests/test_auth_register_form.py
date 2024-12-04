@@ -22,6 +22,10 @@ class AuthRegisterFormUnitTest(TestCase):
 
     @parameterized.expand([
         ('email','The e-mail must be valid'),
+        ('username',(
+            'Username must have letter, numbers or one of those _-', # Just - and _ other charactes will not be accepted
+            'The length should be between 4 and 50 characters.'
+        ))
     ])
     def test_helptexts_are_correct(self,field : str, help_text_nedded: str):
         form = RegisterForm() 
@@ -35,6 +39,7 @@ class AuthRegisterFormUnitTest(TestCase):
             ('last_name', 'Last name'),
             ('email', 'E-mail'),
             ('password', 'Password'),
+            ('username','Username')
     ])
     def test_labels_are_correct(self,field: str, label_nedded: str):
         form = RegisterForm() 
@@ -69,6 +74,7 @@ class AuthoRegisterIntegrationTest(DJTestCase):
         ('password','Password must not be empty'),
         ('password2','Pleas repeat your password'),
         ('email','Email is required'),
+        ('username','Username must not be empty'),
 
     ])
     def test_fields_can_not_be_empty(self, field: str, msg: str):
@@ -77,4 +83,63 @@ class AuthoRegisterIntegrationTest(DJTestCase):
         response = self.client.post(url,data=self.form_data,follow=True)
         
         self.assertIn(msg,response.context['form'].errors.get(field))
+        
+    def test_username_field_min_length_should_be_4(self):
+        msg = 'Username must have at least four characters'
+        self.form_data['username'] = '123'
+        url = reverse('auth:create')
+        response = self.client.post(url,data=self.form_data,follow=True)
+        
+        self.assertIn(msg,response.context['form'].errors.get('username'))
+        
+    def test_username_field_max_length_should_be_50(self):
+        msg = 'Username must have less than 50 characters'
+        self.form_data['username'] = 'a' * 51
+
+        url = reverse('auth:create')
+        response = self.client.post(url,data=self.form_data,follow=True)
+        
+        self.assertIn(msg,response.context['form'].errors.get('username'))
+        
+    def test_password_field_have_lowers_uppers_case_letters_and_numbers(self):
+        msg = 'Password is not strong'
+        self.form_data['password'] = 'just_letters'
+
+        url = reverse('auth:create')
+        response = self.client.post(url, data=self.form_data, follow=True)
+
+        errors = response.context['form'].errors.get('password', [])
+        self.assertIn(msg, errors)
+
+        # Valid pass
+        self.form_data['password'] = 'V4l1DP4assw0rd'
+
+        url = reverse('auth:create')
+        response = self.client.post(url, data=self.form_data, follow=True)
+
+        errors = response.context['form'].errors.get('password', [])
+        self.assertNotIn(msg, errors)
+        
+    def test_passwrods_must_be_equal(self):
+        msg = 'Passwords must be equal'
+        self.form_data['password'] = 'V4l1DP4assw0rd'
+        self.form_data['password2'] = '0therPassword'
+        url = reverse('auth:create')
+        response = self.client.post(url, data=self.form_data, follow=True)
+
+        errors = response.context['form'].errors.get('password2', [])
+        self.assertIn(msg, errors)
+        
+        # Valid pass
+        
+        self.form_data['password'] = 'V4l1DP4assw0rd'
+        self.form_data['password2'] = 'V4l1DP4assw0rd'
+        url = reverse('auth:create')
+        response = self.client.post(url, data=self.form_data, follow=True)
+
+        errors = response.context['form'].errors.get('password2', [])
+        self.assertNotIn(msg, errors)
+        
+        
+
 
