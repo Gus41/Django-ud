@@ -24,7 +24,9 @@ def create(request: HttpRequest):
     form = RegisterForm(POST)
 
     if form.is_valid():
-        form.save()
+        user = form.save(commit=False)
+        user.set_password(user.password) # hash pass
+        user.save()
         
         messages.success(request,"User created!")
         del(request.session["register_form_data"])
