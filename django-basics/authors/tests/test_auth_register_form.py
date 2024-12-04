@@ -141,5 +141,12 @@ class AuthoRegisterIntegrationTest(DJTestCase):
         self.assertNotIn(msg, errors)
         
         
+    def test_send_get_request_to_registration_create_view_returns_404(self):
+        url = reverse('auth:create')
+        response = self.client.get(url)
+        
+        self.assertEqual(response.status_code,404)
+        
+        
 
 
