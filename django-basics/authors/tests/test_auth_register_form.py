@@ -60,8 +60,8 @@ class AuthoRegisterIntegrationTest(DJTestCase):
             'first_name': 'name',
             'last_name': 'last',
             'email': 'test@email.com',
-            'password': 'str0ngp4assw0rd',
-            'password2': 'str0ngp4assw0rd'
+            'password': 'V4l1DP4assw0rd',
+            'password2': 'V4l1DP4assw0rd'
         }
 
         return super().setUp(*args, **kwargs)
@@ -146,6 +146,19 @@ class AuthoRegisterIntegrationTest(DJTestCase):
         response = self.client.get(url)
         
         self.assertEqual(response.status_code,404)
+        
+    def test_author_created_can_login(self):
+        url = reverse("auth:create")
+        
+        response = self.client.post(url, data=self.form_data, follow=True)
+        
+        print(response.context['form'].errors)
+        auth = self.client.login(
+            username=self.form_data['username'],
+            password=self.form_data['password']
+        )
+        self.assertTrue(auth)
+        
         
     
         
