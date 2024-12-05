@@ -3,6 +3,7 @@ from .forms import RegisterForm,LoginForm
 from django.http import HttpRequest,Http404
 from django.contrib import messages
 from django.urls import reverse
+from django.contrib.auth import authenticate, login
 
 def register(request: HttpRequest):
 
@@ -18,7 +19,7 @@ def register(request: HttpRequest):
 #---------------------------------------------
 def create(request: HttpRequest):
     if not request.POST:
-        raise Http404
+        raise Http404()
 
     POST = request.POST
 
@@ -35,16 +36,33 @@ def create(request: HttpRequest):
 
     return redirect('auth:register')
 
-def login(request: HttpRequest):
-    
+#---------------------------
+
+def login_view(request: HttpRequest):
     form = LoginForm()
     context = {
-        'form' : form,
-        'form_action': reverse('auth:login')
+        'form': form,
+        'form_action': reverse('auth:recive'),
     }
-    return render(request,'author/pages/login.html',context)
-
+    return render(request, 'author/pages/login.html', context)
 
 def recive_login(request: HttpRequest):
-    if not request.POST:
-        raise Http404
+    if request.method != "POST":
+        raise Http404()
+    
+    form = LoginForm(request.POST)
+    login_url = reverse("auth:login")
+    
+    if form.is_valid():
+        authenticate_user = authenticate(
+            username=form.cleaned_data.get('username', ''),
+            password=form.cleaned_data.get("password", ''),
+        )
+        if authenticate_user is not None:
+            login(request, authenticate_user)  
+            messages.success(request, "You are Logged In!")
+        else:
+            messages.error(request, "Invalid credentials")
+    else:
+        messages.error(request, "Invalid data")
+    return redirect(login_url)

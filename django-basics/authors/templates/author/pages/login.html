@@ -3,6 +3,9 @@
 {% block page %}
 <div class="main-content container main-content-list center">
     <h2>Login</h2>
+    {% if request.user.is_authenticated %}
+        <p class="cente">You are alredy logged in as {{request.user.username}}</p>
+    {% endif %}
 </div>
 
 {% include "global/partials/form.html" %}
