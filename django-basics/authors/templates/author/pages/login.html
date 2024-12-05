@@ -4,7 +4,12 @@
 <div class="main-content container main-content-list center">
     <h2>Login</h2>
     {% if request.user.is_authenticated %}
-        <p class="cente">You are alredy logged in as {{request.user.username}}</p>
+        <p class="cente">You are alredy logged in as {{request.user.username}} 
+        <form action="{% url "auth:logout" %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="username" value="{{request.user.username}}">
+            <button type="submit" class="link">Click here to logout.</button>
+        </form>
     {% endif %}
 </div>
 

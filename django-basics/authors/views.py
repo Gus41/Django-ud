@@ -3,7 +3,8 @@ from .forms import RegisterForm,LoginForm
 from django.http import HttpRequest,Http404
 from django.contrib import messages
 from django.urls import reverse
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 def register(request: HttpRequest):
 
@@ -33,8 +34,9 @@ def create(request: HttpRequest):
         
         messages.success(request,"User created!")
         del(request.session["register_form_data"])
+        return redirect(reverse('auth:login'))
 
-    return redirect('auth:register')
+    return redirect(reverse('auth:register'))
 
 #---------------------------
 
@@ -51,7 +53,7 @@ def recive_login(request: HttpRequest):
         raise Http404()
     
     form = LoginForm(request.POST)
-    login_url = reverse("auth:login")
+    initial = reverse("recipe:home")
     
     if form.is_valid():
         authenticate_user = authenticate(
@@ -65,4 +67,17 @@ def recive_login(request: HttpRequest):
             messages.error(request, "Invalid credentials")
     else:
         messages.error(request, "Invalid data")
-    return redirect(login_url)
+    return redirect(initial)
+
+@login_required(login_url='auth:login', redirect_field_name='next')
+def logout_view(request: HttpRequest):
+    if not request.POST:
+        raise Http404()
+    
+    if request.POST.get("username") != request.user.username:
+        return redirect(reverse("auth:login"))
+        
+        
+    logout(request)
+    messages.success(request,"You are loged out")
+    return redirect(reverse("auth:login"))
