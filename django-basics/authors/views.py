@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from recipes.models import Recipe
 
 def register(request: HttpRequest):
 
@@ -63,6 +64,7 @@ def recive_login(request: HttpRequest):
         if authenticate_user is not None:
             login(request, authenticate_user)  
             messages.success(request, "You are Logged In!")
+            return redirect(reverse("recipe:dashboard"))
         else:
             messages.error(request, "Invalid credentials")
     else:
@@ -81,3 +83,33 @@ def logout_view(request: HttpRequest):
     logout(request)
     messages.success(request,"You are loged out")
     return redirect(reverse("auth:login"))
+
+
+@login_required(login_url='auth:login', redirect_field_name='next')
+def dashboard(request: HttpRequest):
+    recipes = Recipe.objects.filter(
+        is_published=False,
+        author=request.user
+    )
+    context = {
+        'recipes': recipes
+    }
+    return render(request,"author/pages/dashboard.html",context)
+
+
+@login_required(login_url='auth:login', redirect_field_name='next')
+def dashboard_recipe(request: HttpRequest, id: int):
+    recipe = Recipe.objects.filter(
+        is_published=False,
+        author=request.user,
+        pk=id
+    )
+    if not recipe:
+        raise Http404()
+    
+    context = {
+        'recipe': recipe
+    }
+    return render(request,"author/pages/dashboard_recipe.html",context)
+
+

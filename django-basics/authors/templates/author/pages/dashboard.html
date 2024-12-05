@@ -1,0 +1,23 @@
+{% extends "global/base.html" %}
+{% block title %}DashBoard{% endblock title %}
+{% block page %}
+<div class="main-content container main-content-list center">
+    <h2>DashBoard - {{user}}</h2>
+</div>
+
+<div class="author-dashboard-container">
+    <h3>Your recipes</h3>
+    <ul>
+        {% for recipe in recipes %}
+            <li><a href="{% url "auth:dashboard_recipe" recipe.id %}">{{recipe.title}}</a>
+            
+        {% empty %}
+            <li></li><p>No recipes found</p>
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock page %}
+
+
+
