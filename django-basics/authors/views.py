@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from .forms import RegisterForm,LoginForm
+from .forms import RegisterForm,LoginForm,AuthorRecipeForm
 from django.http import HttpRequest,Http404
 from django.contrib import messages
 from django.urls import reverse
@@ -103,12 +103,16 @@ def dashboard_recipe(request: HttpRequest, id: int):
         is_published=False,
         author=request.user,
         pk=id
-    )
+    ).first()
+    
     if not recipe:
         raise Http404()
     
+    form = AuthorRecipeForm(data=request.POST or None,instance=recipe)
+    
     context = {
-        'recipe': recipe
+        'recipe': recipe,
+        'form': form
     }
     return render(request,"author/pages/dashboard_recipe.html",context)
 
