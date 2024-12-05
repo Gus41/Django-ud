@@ -1,22 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-import re
+from utils.tools_forms import add_placeholder,strong_password
 
-
-def add_attr(field,attr_name,attr_val):
-    field.widget.attrs[attr_name] = f'{attr_val}'.strip()
-
-
-def add_placeholder(field,place_holder_val: str):
-    add_attr(field,'placeholder',place_holder_val)
-
-def strong_password(password: str):
-    regex = re.compile(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$')
-
-    if not regex.match(password):
-        raise ValidationError("Password is not strong",code='invalid')
-    
 
 class RegisterForm(forms.ModelForm):
 

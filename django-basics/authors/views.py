@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from .forms import RegisterForm
+from .forms import RegisterForm,LoginForm
 from django.http import HttpRequest,Http404
 from django.contrib import messages
 from django.urls import reverse
@@ -34,3 +34,17 @@ def create(request: HttpRequest):
         del(request.session["register_form_data"])
 
     return redirect('auth:register')
+
+def login(request: HttpRequest):
+    
+    form = LoginForm()
+    context = {
+        'form' : form,
+        'form_action': reverse('auth:login')
+    }
+    return render(request,'author/pages/login.html',context)
+
+
+def recive_login(request: HttpRequest):
+    if not request.POST:
+        raise Http404

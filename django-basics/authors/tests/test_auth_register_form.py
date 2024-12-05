@@ -1,5 +1,5 @@
 from unittest import TestCase
-from authors.forms import RegisterForm
+from authors.forms import RegisterForm 
 from parameterized import parameterized
 
 #this test are using TestCase from unittest, not from django
