@@ -13,3 +13,13 @@ def strong_password(password: str):
 
     if not regex.match(password):
         raise ValidationError("Password is not strong",code='invalid')
+    
+    
+    
+def is_positive_number(value):
+    try:
+        number = float(value)
+    except:
+        return False
+    
+    return number > 0

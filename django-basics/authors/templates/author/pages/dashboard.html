@@ -2,15 +2,20 @@
 {% block title %}DashBoard{% endblock title %}
 {% block page %}
 <div class="main-content container main-content-list center">
-    <h2>DashBoard - {{user}}</h2>
+    <h2><a href="{% url "auth:dashboard" %}">DashBoard - {{user}}</a></h2>
 </div>
 
 <div class="author-dashboard-container">
     <h3>Your recipes</h3>
+    <p><a href="{% url "auth:create_recipe" %}">Create new Recipe</a></p>
     <ul>
         {% for recipe in recipes %}
             <li><a href="{% url "auth:dashboard_recipe" recipe.id %}">{{recipe.title}}</a>
-            
+            <form class="inline-form form-delete" method="POST" action="{% url "auth:delete_recipe"%}" >
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{recipe.id}}">
+                <button class="plaintext-button" type="submit">Apagar receita</button>
+            </form>
         {% empty %}
             <li></li><p>No recipes found</p>
         {% endfor %}

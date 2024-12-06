@@ -108,12 +108,68 @@ def dashboard_recipe(request: HttpRequest, id: int):
     if not recipe:
         raise Http404()
     
-    form = AuthorRecipeForm(data=request.POST or None,instance=recipe)
+    form = AuthorRecipeForm(data=request.POST or None,files=request.FILES or None,instance=recipe)
+    
+    
+    if form.is_valid():
+        _recipe = form.save(commit=False)
+        _recipe.author = request.user
+        _recipe.preparation_steps_is_html = False
+        
+        _recipe.save()
+        messages.success(request,"Recipe saved")
+        return redirect(reverse("auth:dashboard_recipe", args=(id,)))
     
     context = {
         'recipe': recipe,
-        'form': form
+        'form': form,
+        'form_action': reverse("auth:dashboard_recipe", args=(id,))
     }
     return render(request,"author/pages/dashboard_recipe.html",context)
+
+@login_required(login_url='auth:login', redirect_field_name='next')
+def dashboard_create(request: HttpRequest):
+    
+    form = AuthorRecipeForm(data=request.POST or None,files=request.FILES or None)
+    
+    if form.is_valid():
+        recipe = form.save(commit=False)
+        recipe.is_published = False
+        recipe._preparation_steps_is_html = False
+        recipe.author = request.user
+        id = recipe.pk
+        
+        recipe.save()
+        messages.success(request,"Recipe created")
+        return redirect(reverse("auth:dashboard_recipe", args=(id,)))
+        
+    context = {
+        'form': form,
+        'form_action': reverse('auth:create_recipe')
+    }
+    
+    return render(request,"author/pages/dashboard_recipe.html",context)
+
+
+@login_required(login_url='auth:login', redirect_field_name='next')
+def dashboard_delete_recipe(request: HttpRequest):
+    
+    if not request.POST:
+        raise Http404()
+    
+    id = request.POST.get("id")
+    
+    recipe = Recipe.objects.filter(
+        is_published=False,
+        author=request.user,
+        pk=id
+    ).first()
+    
+    if not recipe:
+        raise Http404()
+    
+    recipe.delete()
+    messages.success(request,"Recipe deleted")
+    return redirect(reverse("auth:dashboard"))
 
 

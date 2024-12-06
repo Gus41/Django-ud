@@ -318,7 +318,9 @@ h1,h2,h3,h4,h5,h6{
         list-style-type: none;
         margin: 1rem 0;
       }
-  
+      .max-w-100{
+        max-width: 100px;
+      }
   @media (max-width: 600px){
       .main-content-list,
       .form-content-grid{
