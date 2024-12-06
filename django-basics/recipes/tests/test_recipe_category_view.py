@@ -6,7 +6,7 @@ class RecipeCategoryViewsTest(RecipeTestBase):
    
     def test_recipe_category_view_function_is_correct(self):
         view = resolve(reverse('recipe:category', kwargs={'id' : 1}))
-        self.assertIs(view.func,views.category)
+        self.assertIs(view.func.view_class,views.RecipeListViewCategory)
         
     def test_recipe_category_temaplte_dont_load_recipes_not_published(self):
         nedded_title = 'This recipe will not apear'
