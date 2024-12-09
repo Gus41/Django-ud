@@ -4,6 +4,7 @@ from recipes.models import Recipe
 from utils import pagination
 from django.http import Http404
 from django.db.models import Q
+from django.http import JsonResponse
 
 
 PER_PAGE = os.environ.get("PER_PAGE")
@@ -88,5 +89,17 @@ class RecipeListViewSearch(RecipeListViewBase):
             'aditional_url_query' : f'&q={term}'
         })
         return context_data
+    
+    
+    
+class RecipeListViewHomeApi(RecipeListViewBase):
+    template_name = 'recipes/pages/home.html'
+    
+    def render_to_response(self, context, **response_kwargs):
+        recipes = list(self.get_context_data()['recipes'].object_list.values()) 
+        
+        return JsonResponse(recipes, safe=False)
+
+
 
     

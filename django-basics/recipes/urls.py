@@ -1,4 +1,4 @@
-from recipes.views import RecipeListViewHome,RecipeListViewCategory,RecipeListViewSearch,RecipeDetail
+from recipes.views import RecipeListViewHome,RecipeListViewCategory,RecipeListViewSearch,RecipeDetail,RecipeListViewHomeApi,RecipeDetailApi
 from django.urls import path
 
 
@@ -8,4 +8,7 @@ urlpatterns = [
     path('recipes/search/',RecipeListViewSearch.as_view(),name='search'),
     path('recipes/category/<int:id>', RecipeListViewCategory.as_view(),name='category'),
     path('recipes/<int:pk>/',RecipeDetail.as_view(),name='detail'),
+    
+    path('recipes/api/v1',RecipeListViewHomeApi.as_view(),name='recipesapi'),
+     path('recipes/api/v1/<int:pk>',RecipeDetailApi.as_view(),name='recipesapi'),
 ]
