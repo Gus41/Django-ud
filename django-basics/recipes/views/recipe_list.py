@@ -98,6 +98,26 @@ class RecipeListViewHomeApi(RecipeListViewBase):
         recipes = list(self.get_context_data()['recipes'].object_list.values()) 
         
         return JsonResponse(recipes, safe=False)
+    
+    
+    
+    
+ 
+class RecipeListViewTags(RecipeListViewBase):
+    template_name = 'recipes/pages/tags.html'
+    
+    
+    def get_queryset(self,*args, **kwargs):
+        query_set = super().get_queryset(*args, **kwargs)
+        query_set = query_set.filter(tags__slug=self.kwargs.get('slug',''))
+        
+        return query_set
+    
+    def get_context_data(self, *args, **kwargs):
+        context_data = super().get_context_data(*args, **kwargs)
+        
+        
+        return context_data
 
 
 

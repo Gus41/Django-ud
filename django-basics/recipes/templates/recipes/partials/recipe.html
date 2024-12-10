@@ -61,6 +61,15 @@
             <p>{{recipe.preparation_steps|linebreaksbr}}</p>
 
         {% endif %}
+
+        {% if recipe.tags.all %}
+        <p>Tags:</p>
+            {% for tag in recipe.tags.all  %}
+            <ul>
+                <li><a href="{% url "recipe:tags" tag.slug %}">{{tag.name}}</a>
+            </ul>
+            {% endfor %}
+        {% endif %}
     </div>        
     {% else %}
         <footer class="recipe-footer">
