@@ -1,4 +1,4 @@
-from recipes.views import RecipeListViewHome,RecipeListViewCategory,RecipeListViewSearch,RecipeDetail,RecipeListViewHomeApi,RecipeDetailApi
+from recipes.views import RecipeListViewHome,RecipeListViewCategory,RecipeListViewSearch,RecipeDetail,RecipeListViewHomeApi,RecipeDetailApi, Theory
 from django.urls import path
 
 
@@ -11,4 +11,7 @@ urlpatterns = [
     
     path('recipes/api/v1',RecipeListViewHomeApi.as_view(),name='recipesapi'),
      path('recipes/api/v1/<int:pk>',RecipeDetailApi.as_view(),name='recipesapi'),
+     
+     #--
+     path("recipes/theory/",Theory,name='theory')
 ]

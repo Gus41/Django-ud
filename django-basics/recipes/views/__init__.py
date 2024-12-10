@@ -1,2 +1,3 @@
 from .recipe_list import RecipeListViewHome,RecipeListViewCategory,RecipeListViewSearch,RecipeListViewHomeApi
 from .recipe_detail import RecipeDetail,RecipeDetailApi
+from .theory import Theory

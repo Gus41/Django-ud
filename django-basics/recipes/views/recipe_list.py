@@ -60,7 +60,6 @@ class RecipeListViewSearch(RecipeListViewBase):
     template_name = 'recipes/pages/search.html'
     
     
-    
     def get_queryset(self,*args, **kwargs):
         query_set = super().get_queryset(*args, **kwargs)
         term = self.request.GET.get("q",'')
