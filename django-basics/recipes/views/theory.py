@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from recipes.models import Recipe
-from django.db.models import Q
-
+from django.db.models import Q,Value,F
+from django.db.models.functions import Concat
 
 def Theory(request, *args, **kwargs):
     
@@ -14,7 +14,10 @@ def Theory(request, *args, **kwargs):
                 id__gt=1000
             )
         )
-    )[:10]
+    )[:10].annotate(
+        author_full_name=Concat(F("author__first_name"), Value(" "), F("author__last_name"))
+    )
+    
     
     context = {
         'recipes': recipes

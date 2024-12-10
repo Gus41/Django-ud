@@ -2,7 +2,9 @@
 {% block title %}Theory{% endblock title %}
 {% block page %}
 <div class="main-content container main-content-list">
-    
+    {% for recipe in recipes  %}
+        {{recipe.author_full_name}}
+    {% endfor %}
 </div>
 
 {% endblock page %}
