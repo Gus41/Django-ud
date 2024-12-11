@@ -64,7 +64,7 @@ def recive_login(request: HttpRequest):
         if authenticate_user is not None:
             login(request, authenticate_user)  
             messages.success(request, "You are Logged In!")
-            return redirect(reverse("recipe:dashboard"))
+            return redirect(initial)
         else:
             messages.error(request, "Invalid credentials")
     else:
