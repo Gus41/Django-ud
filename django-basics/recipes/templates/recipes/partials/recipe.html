@@ -15,7 +15,11 @@
         {% if recipe.author is not None and recipe.author  %}
         <span class="recipe-author-item">
             <i class="fas fa-user"></i>
-            {{recipe.author.first_name}}
+            {% if recipe.author.profile %}
+                <a href="{% url 'auth:profile' recipe.author.profile.id %}">{{recipe.author.username}}</a>
+                {% else %}
+                {{recipe.author.first_name}}
+            {% endif %}
         </span>
         {% endif %}
 
