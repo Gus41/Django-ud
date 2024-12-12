@@ -1,42 +1,37 @@
 from rest_framework import serializers
-from recipes.models import Recipe,Category
+from recipes.models import Recipe, Category
 from tags.models import Tag
-from django.contrib.auth.models import User
 
 
-class TagSerializer(serializers.Serializer):
-    id = serializers.IntegerField()
-    name = serializers.CharField(max_length=255)
-    slug = serializers.SlugField()
-    
-    
-    
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ['id', 'name', 'slug']
 
-class RecipeSerializer(serializers.Serializer):
-    #fields
-    id = serializers.IntegerField()
-    title = serializers.CharField(max_length=255)
-    description = serializers.CharField(max_length=255)
-    public = serializers.BooleanField(source='is_published')
-    preparation = serializers.SerializerMethodField()
-    category = serializers.PrimaryKeyRelatedField(
-        queryset = Category.objects.all()
-    )
-    category_name = serializers.StringRelatedField(
-        source='category'
-    )
-    author = serializers.PrimaryKeyRelatedField(
-        queryset = User.objects.all()
+
+class RecipeSerializer(serializers.ModelSerializer):
+    public = serializers.BooleanField(source='is_published', read_only=True)
+    preparation = serializers.SerializerMethodField(read_only=True)
+    category_name = serializers.StringRelatedField(source='category', read_only=True)
+    tag_objects = TagSerializer(many=True, source='tags', read_only=True)
+    tag_links = serializers.HyperlinkedRelatedField(
+        many=True,
+        source='tags',
+        view_name='recipe:api_tag',
+        read_only=True
     )
     tags = serializers.PrimaryKeyRelatedField(
-        queryset = Tag.objects.all(),
-        many=True
-    )
-    tag_objects = TagSerializer(
-        many=True,
-        source='tags'
-    )
-    def get_preparation(self,recipe):
-        return f'{recipe.preparation_time} {recipe.preparation_time_unit}'
-    
-    
+            many=True,
+            queryset=Tag.objects.all(),
+            required=False  
+        )
+    class Meta:
+        model = Recipe
+        fields = [
+            'id', 'title', 'description', 'author', 'category', 
+            'tags', 'public', 'preparation', 'tag_objects', 
+            'tag_links', 'category_name'
+        ]
+
+    def get_preparation(self, recipe):
+        return f"{recipe.preparation_time} {recipe.preparation_time_unit}"
