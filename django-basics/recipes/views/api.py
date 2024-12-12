@@ -8,7 +8,8 @@ from django.shortcuts import get_object_or_404
 
 @api_view()
 def recipe_list(request):
-    recipes = Recipe.objects.all()
+    recipes = Recipe.objects.get_recipes_publhised()
+    
     serializer = RecipeSerializer(instance=recipes,many=True)
     
     return Response(serializer.data)
@@ -17,9 +18,10 @@ def recipe_list(request):
 @api_view()
 def recipe(request,pk):
     recipe = get_object_or_404(
-        Recipe.objects.all(),
+        Recipe.objects.get_recipes_publhised(),
         pk=pk
     )
     serializer = RecipeSerializer(instance=recipe)
     
     return Response(serializer.data)
+
