@@ -5,7 +5,9 @@ from django.forms import ValidationError
 from django.urls import reverse
 from django.utils.text import slugify 
 from tags.models import Tag
-from django.contrib.contenttypes.fields import GenericRelation
+import os
+from django.conf import settings
+from PIL import Image
 
 class Category(models.Model):
     name = models.CharField(max_length=65)
@@ -48,13 +50,39 @@ class Recipe(models.Model):
     def get_absolute_url(self):
         return reverse("recipe:detail", args=(self.id,))
     
+    @staticmethod
+    def resize_image(img,new_width=800):
+        img_full_path = os.path.join(settings.MEDIA_ROOT, img.name)
+        img_pillow = Image.open(img_full_path)
+        original_width, original_height = img_pillow.size
+        
+        if original_width <= new_width:
+            img_pillow.close()
+            return
+        new_heigth = round((new_width * original_height) / original_width) # regra de 3
+        
+        new_img = img_pillow.resize((new_width,new_heigth,),Image.LANCZOS)
+        new_img.save(
+            img_full_path,
+            optimize=True,
+            quality=60
+        )
+        #print("resizing image")
+    
     def save(self,*args, **kwargs):
+        
         if not self.slug:
             slug = f'{slugify(self.title)}'
             self.slug = slug
             
-            
-        return super().save(*args, **kwargs)
+        saved = super().save(*args, **kwargs)
+        
+        if self.cover:
+            try:
+                self.resize_image(self.cover)
+            except FileNotFoundError:
+                ...
+        return saved
     
     def clean(self, *args, **kwargs):
         error_messages = defaultdict(list)
