@@ -24,7 +24,7 @@ class RecipeManager(models.Manager):
     
     def get_recipes_publhised(self):
         return self.filter(
-            is_published=False
+            is_published=True
         ).select_related('category','author').prefetch_related('tags')
 
 class Recipe(models.Model):

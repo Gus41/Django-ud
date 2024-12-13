@@ -1,5 +1,6 @@
-from recipes.views import RecipeListViewHome,RecipeListViewCategory,RecipeListViewSearch,RecipeDetail,RecipeListViewHomeApi,RecipeDetailApi, Theory,RecipeListViewTags,recipe_list,recipe,tag
+from recipes.views import *
 from django.urls import path
+from rest_framework.routers import SimpleRouter
 
 
 app_name = 'recipe'
@@ -19,12 +20,19 @@ urlpatterns = [
      #api
      path(
          'api/recipes/',
-         recipe_list,
+         RecipeApi.as_view({
+             'get': 'list',
+             'post': 'create',
+             }),
          name='api_recipes'
      ),
      path(
          'api/recipes/<int:pk>',
-         recipe,
+         RecipeApi.as_view({
+             'get': 'retrieve',
+             'patch': 'partial_update',
+             'delete': 'destroy'
+             }),
          name='api_recipes'
      ),
      path(
