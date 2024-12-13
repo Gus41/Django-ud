@@ -8,6 +8,10 @@ from tags.models import Tag
 import os
 from django.conf import settings
 from PIL import Image
+from django.utils.text import slugify
+import string
+from random import SystemRandom
+
 
 class Category(models.Model):
     name = models.CharField(max_length=65)
@@ -70,10 +74,16 @@ class Recipe(models.Model):
         #print("resizing image")
     
     def save(self,*args, **kwargs):
-        
         if not self.slug:
-            slug = f'{slugify(self.title)}'
-            self.slug = slug
+            rand_chars = ''.join(
+                SystemRandom().choices(
+                    string.ascii_letters + string.digits,
+                    k=5
+                )
+            )
+            self.slug = slugify(f'{self.title}-{rand_chars}')
+            
+       
             
         saved = super().save(*args, **kwargs)
         
@@ -85,6 +95,7 @@ class Recipe(models.Model):
         return saved
     
     def clean(self, *args, **kwargs):
+        
         error_messages = defaultdict(list)
         
         recipe_from_db = Recipe.objects.filter(

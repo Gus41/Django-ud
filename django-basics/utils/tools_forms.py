@@ -19,7 +19,7 @@ def strong_password(password: str):
 def is_positive_number(value):
     try:
         number = float(value)
-    except:
+    except (ValueError, TypeError):
         return False
     
     return number > 0

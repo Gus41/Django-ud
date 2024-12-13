@@ -1,16 +1,10 @@
 from django import forms
 from recipes.models import Recipe
-from collections import defaultdict
-from django.core.exceptions import ValidationError
-from utils.tools_forms import is_positive_number 
-
+from authors.validators import AuthorRecipeValidator
 class AuthorRecipeForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
-        self.form_errors = defaultdict(list) # empty list
-        
         
     
     class Meta:
@@ -34,26 +28,10 @@ class AuthorRecipeForm(forms.ModelForm):
                 )
             )
         }
+    def clean(self):
         
-    def clean(self,*args, **kwargs):
-        super_clean = super().clean(*args, **kwargs)
-        cleaned_data = self.cleaned_data
-        title = cleaned_data.get('title')
-        servings = cleaned_data.get('servings')
-        preparation_time = cleaned_data.get('preparation_time')
+        AuthorRecipeValidator(self.cleaned_data)
         
-        if len(title) < 5:
-            self.form_errors['title'].append('Title mus have at least 5 chars.')
-            
-        if not is_positive_number(servings):
-            self.form_errors['servings'].append("Servings must be a valid number")
-            
-        if not is_positive_number(preparation_time):
-            self.form_errors['preparation_time'].append('Preparation time must be a valid number')
-            
-            
-        if self.form_errors:
-            raise ValidationError(self.form_errors)
+        return super().clean()
         
-        
-        return super_clean
+   
