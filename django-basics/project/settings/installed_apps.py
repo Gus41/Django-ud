@@ -10,7 +10,8 @@ INSTALLED_APPS = [
     
     #drf
     'rest_framework',
-    
+    'rest_framework_simplejwt',
+
     #apps
     'recipes',
     'authors',
