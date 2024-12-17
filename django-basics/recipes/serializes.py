@@ -29,7 +29,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     author = serializers.PrimaryKeyRelatedField(
         many=False,
         queryset=User.objects.all(),
-        required=True
+        required=False
     )
     class Meta:
         model = Recipe

@@ -1,7 +1,12 @@
 from django.urls import path
 from . import views
+from rest_framework.routers import SimpleRouter
+
+router = SimpleRouter()
 
 app_name = 'auth'
+router.register('api',views.AuthView, basename='author-api')
+
 
 urlpatterns = [
     path('register/',views.register, name='register'),
@@ -16,3 +21,4 @@ urlpatterns = [
     path('dashboard/delete',views.DashBoardDeleteRecipe.as_view(),name="delete_recipe"),
     
 ]
+urlpatterns += router.urls
