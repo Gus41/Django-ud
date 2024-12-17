@@ -12,7 +12,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 
 class RecipeApiPagination(PageNumberPagination):
-    page_size = 10
+    page_size = 5
     def get_next_link(self):
             url = super().get_next_link()
             if url:
@@ -32,7 +32,7 @@ class RecipeApi(ModelViewSet):
     pagination_class = RecipeApiPagination
     permission_classes = [IsAuthenticatedOrReadOnly,]
     http_method_names = [
-        'get','options','head','delete','patch'
+        'get','options','head','delete','patch','post'
     ]
     def get_queryset(self):
         query_set = super().get_queryset()

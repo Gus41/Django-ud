@@ -9,13 +9,11 @@ from rest_framework_simplejwt.views import (
 
 
 
+app_name = 'recipe'
 
 router = SimpleRouter()
 router.register('api/recipes',RecipeApi,basename='recipe_api')
 
-
-
-app_name = 'recipe'
 urlpatterns = [
     path('',RecipeListViewHome.as_view(),name='home'),
     path('recipes/search/',RecipeListViewSearch.as_view(),name='search'),
