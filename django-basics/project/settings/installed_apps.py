@@ -7,6 +7,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    #cors
+    'corsheaders',
     
     #drf
     'rest_framework',
