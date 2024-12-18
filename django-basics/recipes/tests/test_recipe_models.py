@@ -25,7 +25,7 @@ class RecipeModelTest(RecipeTestBase):
         recipe = models.Recipe(
             category = self.make_category('Teste_default'),
             author=self.make_author(username="User_default"),
-            title='Recipe Title',
+            title='Recipe Title1',
             description='Recipe Description',
             slug='recipe-slug-test',
             preparation_time=10,
@@ -42,7 +42,7 @@ class RecipeModelTest(RecipeTestBase):
         recipe = models.Recipe(
             category = self.make_category('Teste_default'),
             author=self.make_author(username="User_default"),
-            title='Recipe Title',
+            title='Recipe Titl2e',
             description='Recipe Description',
             slug='recipe-slug-test',
             preparation_time=10,
